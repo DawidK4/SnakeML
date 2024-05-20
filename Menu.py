@@ -25,6 +25,7 @@ class ScoreBoard:
     exit_button = Button((0, 255, 0), 800, 100, 'Exit', 'Photos/ExitButton.png')
     working = True
     scroll = 0
+    image = pg.image.load('Photos/scoreBoardImage.jpg')
     def __init__(self, screen):
         self.scores = []
         self.screen = screen
@@ -36,9 +37,11 @@ class ScoreBoard:
 
     def display(self):
         self.working = True
-        self.screen.fill((0, 0, 0))  # Clear the screen
+        self.screen.blit(self.image, (0, 0))
         for i, score in enumerate(self.scores):
             text = self.font.render(f'Score {i + 1}: {score}', True, (255, 255, 255))
+            textHS = self.font.render(f'Generation: {self.scores.__len__()}', True, (255, 255, 255))
+            self.screen.blit(textHS, (800, 50))
             self.screen.blit(text, (50, 50 + i * 30 - self.scroll))
         self.exit_button.draw(self.screen)
         pg.display.flip()
