@@ -1,34 +1,68 @@
+import pygame as pg
+import Kierunek
+import Plansza
+
 
 class Snake:
-    def __init__(self):
-        self.kierunek = Kierunek.PRAWO
-        self.dlugosc = 1
-        self.cialo = [punkt(1, 1)]
-        self.koniec_gry = False
+    headUp = pg.image.load('Photos/Snake_Head/Head_Up.png').convert_alpha()
+    headLeft = pg.image.load('Photos/Snake_Head/Head_Left.png').convert_alpha()
+    headRight = pg.image.load('Photos/Snake_Head/Head_Right.png').convert_alpha()
+    headDown = pg.image.load('Photos/Snake_Head/Head_Down.png').convert_alpha()
+    middleHorizontal = pg.image.load('Photos/Snake_Body/Body_Horizontal.png').convert_alpha()
+    middleVertical = pg.image.load('Photos/Snake_Body/Body_Vertical.png').convert_alpha()
+    tailUp = pg.image.load('Photos/Snake_Tail/Tail_Up.png').convert_alpha()
+    tailDown = pg.image.load('Photos/Snake_Tail/Tail_Down.png').convert_alpha()
+    tailLeft = pg.image.load('Photos/Snake_Tail/Tail_Left.png').convert_alpha()
+    tailRight = pg.image.load('Photos/Snake_Tail/Tail_Right.png').convert_alpha()
 
-    def ruch(self):
-        if self.kierunek == Kierunek.GORA:
-            nowa_glowa = punkt(self.cialo[0].x, self.cialo[0].y - 1)
-        elif self.kierunek == Kierunek.DOL:
-            nowa_glowa = punkt(self.cialo[0].x, self.cialo[0].y + 1)
-        elif self.kierunek == Kierunek.LEWO:
-            nowa_glowa = punkt(self.cialo[0].x - 1, self.cialo[0].y)
-        elif self.kierunek == Kierunek.PRAWO:
-            nowa_glowa = punkt(self.cialo[0].x + 1, self.cialo[0].y)
-        if nowa_glowa in self.cialo or nowa_glowa.x < 0 or nowa_glowa.x >= Plansza.szerokosc or nowa_glowa.y < 0 or nowa_glowa.y >= Plansza.wysokosc:
-            self.koniec_gry = True
-        else:
-            self.cialo.insert(0, nowa_glowa)
-            if len(self.cialo) > self.dlugosc:
-                self.cialo.pop()
+    # tego nie ruszać benkarty
+    def draw(self, plansza):
+        self.updateHeadGraphics()
+        self.updateTailGraphics()
+        for index, block in enumerate(self.cialo):
+            x = block.x * Plansza.rozmiar
+            y = block.y * Plansza.rozmiar
+            rect = pg.Rect(x, y, Plansza.rozmiar, Plansza.rozmiar)
+            if index == 0:
+                screen.blit(self.head, rect)
+            elif index == len(self.body) - 1:
+                screen.blit(self.tail, rect)
+            else:
+                prevoiusBlock = self.body[index + 1] - block
+                nextBlock = self.body[index - 1] - block
+                if prevoiusBlock.x == nextBlock.x:
+                    screen.blit(Snake.middleVertical, rect)
+                elif prevoiusBlock.y == nextBlock.y:
+                    screen.blit(Snake.middleHorizontal, rect)
+                else:
+                    if prevoiusBlock.x == -1 and nextBlock.y == -1 or prevoiusBlock.y == -1 and nextBlock.x == -1:
+                        screen.blit(Snake.turnRightDown, rect)
+                    elif prevoiusBlock.x == -1 and nextBlock.y == 1 or prevoiusBlock.y == 1 and nextBlock.x == -1:
+                        screen.blit(Snake.turnRightUp, rect)
+                    elif prevoiusBlock.x == 1 and nextBlock.y == -1 or prevoiusBlock.y == -1 and nextBlock.x == 1:
+                        screen.blit(Snake.turnLeftDown, rect)
+                    elif prevoiusBlock.x == 1 and nextBlock.y == 1 or prevoiusBlock.y == 1 and nextBlock.x == 1:
+                        screen.blit(Snake.turnLeftUp, rect)
 
-    def rysuj(self, plansza):
-        for segment in self.cialo:
-            pg.draw.rect(plansza, (0, 255, 0),
-                         pg.Rect(segment.x * plansza.rozmiar, segment.y * plansza.rozmiar, plansza.rozmiar,
-                                 plansza.rozmiar))
+    def updateHeadGraphics(self):
+        head = self.cialo[1] - self.cialo[0]
+        if head == punkt(1, 0):
+            self.head = Snake.headRight
+        elif head == punkt(-1, 0):
+            self.head = Snake.headLeft
+        elif head == punkt(0, 1):
+            self.head = Snake.headDown
+        elif head == punkt(0, -1):
+            self.head = Snake.headUp
 
-    def kolizja_jedzenia(self, jedzenie):
-        if self.cialo[0] == jedzenie.pozycja:
-            self.dlugosc += 1
-            jedzenie.losuj_pozycje()
+    def updateTailGraphics(self):
+        tail = self.cialo[-2] - self.cialo[-1]
+        if tail == punkt(1, 0):
+            self.tail = Snake.tailLeft
+        elif tail == punkt(-1, 0):
+            self.tail = Snake.tailRight
+        elif tail == punkt(0, 1):
+            self.tail = Snake.tailUp
+        elif tail == punkt(0, -1):
+            self.tail = Snake.tailDown
+    # do tego miejsca

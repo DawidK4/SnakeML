@@ -1,5 +1,7 @@
 import pygame as pg
 
+import Plansza
+
 
 class Button:
     def __init__(self, color, x, y, text='', path=''):
@@ -22,7 +24,7 @@ class Button:
 
 
 class ScoreBoard:
-    exit_button = Button((0, 255, 0), 800, 100, 'Exit', 'Photos/ExitButton.png')
+    exit_button = Button((0, 255, 0), 800, 100, 'Exit', 'Photos/Buttons/ExitButton.png')
     working = True
     scroll = 0
     image = pg.image.load('Photos/scoreBoardImage.jpg')
@@ -71,9 +73,9 @@ class Menu:
     working = True
     clock = pg.time.Clock()
     image = pg.image.load('Photos/menuImage.jpg')
-    start_button = Button((255, 5, 5), 450, 950, 'Start', 'Photos/StartButton.png')
-    exit_button = Button((0, 255, 0), 10, 950, 'Exit', 'Photos/ExitButton.png')
-    scoreboard_button = Button((0, 255, 0), 800, 950, 'Score Board', 'Photos/ScoreBoardButton.png')
+    start_button = Button((255, 5, 5), 450, 950, 'Start', 'Photos/Buttons/StartButton.png')
+    exit_button = Button((0, 255, 0), 10, 950, 'Exit', 'Photos/Buttons/ExitButton.png')
+    scoreboard_button = Button((0, 255, 0), 800, 950, 'Score Board', 'Photos/Buttons/ScoreBoardButton.png')
     scoreboard = ScoreBoard(screen)
 
     def __init__(self):
@@ -92,6 +94,7 @@ class Menu:
                     self.working = False
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if self.start_button.is_over(pos):
+                        Plansza.Plansza(20, 20, 60).draw(self.screen)
                         print('clicked the start button')
                     if self.exit_button.is_over(pos):
                         print('clicked the exit button')
