@@ -1,4 +1,6 @@
 import pygame as pg
+from pygame import Vector2
+
 import Kierunek
 import Plansza
 
@@ -66,3 +68,22 @@ class Snake:
         elif tail == punkt(0, -1):
             self.tail = Snake.tailDown
     # do tego miejsca
+
+    def __init__(self):
+        self.body = [Vector2(5, 10),Vector2(4, 10),Vector2(3, 10)]
+        self.direction = Vector2(1, 0)
+        self.new_block = False
+
+    def move_snake(self):
+        if self.new_block:
+            body_copy = self.body[:]
+            body_copy.insert(0, body_copy[0] + self.direction)
+            self.body = body_copy[:]
+            self.new_block = False
+        else:
+            body_copy = self.body[:-1]
+            body_copy.insert(0, body_copy[0] + self.direction)
+            self.body = body_copy[:]
+
+    def add_block(self):
+        self.new_block = True

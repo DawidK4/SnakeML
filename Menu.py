@@ -95,7 +95,10 @@ class Menu:
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if self.start_button.is_over(pos):
                         Plansza.Plansza(20, 20, 60).draw(self.screen)
-                        print('clicked the start button')
+                        print('clicked the start button start')
+
+
+
                     if self.exit_button.is_over(pos):
                         print('clicked the exit button')
                         self.working = False
